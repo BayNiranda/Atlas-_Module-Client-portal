@@ -15,6 +15,8 @@ export const USERS = {
   consultant: { email: "cems-test-consultant@example.com", name: "Test Consultant" },
   superAdmin: { email: "cems-test-superadmin@example.com", name: "Test Super Admin" },
   convertClient: { email: "cems-test-convert-client@example.com", name: "Test Converted Client" },
+  agreementOwner: { email: "cems-test-agreement-owner@example.com", name: "Test Agreement Owner" },
+  agreementMember: { email: "cems-test-agreement-member@example.com", name: "Test Agreement Member" },
 } as const;
 
 // Staff test users and their roles (everyone else is a client or has no role).
@@ -146,4 +148,18 @@ export async function resetAssessment(orgId: string) {
   const svc = serviceClient();
   await svc.from("assessments").update({ status: "not_started" }).eq("organization_id", orgId);
   await svc.from("assessments").update({ answers: {}, submitted_at: null, submitted_by: null, reviewed_at: null, reviewed_by: null, review_comment: null }).eq("organization_id", orgId);
+}
+
+// Agreements can never be deleted once issued (by design), so agreement tests
+// use one permanent fake company and leave their records in the dev database.
+export const AGREEMENT_ORG = "Agreement Test Co. (automated test)";
+export async function agreementOrg(ids: Record<UserKey, string>) {
+  const svc = serviceClient();
+  let { data } = await svc.from("organizations").select("id").eq("name", AGREEMENT_ORG).maybeSingle();
+  if (!data) data = (await svc.from("organizations").insert({ name: AGREEMENT_ORG, status: "active" }).select("id").single()).data!;
+  await must(svc.from("organization_members").upsert([
+    { organization_id: data.id, user_id: ids.agreementOwner, role: "CLIENT_OWNER", status: "active" },
+    { organization_id: data.id, user_id: ids.agreementMember, role: "CLIENT_MEMBER", status: "active" },
+  ], { onConflict: "organization_id,user_id" }));
+  return data.id as string;
 }

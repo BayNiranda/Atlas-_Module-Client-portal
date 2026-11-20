@@ -7,6 +7,7 @@ import { ShellNav, type NavItem } from "@/components/shell-nav";
 import { listProposals } from "@/modules/proposals/queries";
 import { displayStatus } from "@/modules/proposals/labels";
 import { getOrgAssessment } from "@/modules/assessments/queries";
+import { listAgreements } from "@/modules/agreements/queries";
 import { OrgSwitcher } from "./org-switcher";
 
 // Waits for the login check on the server before sending the page.
@@ -16,10 +17,11 @@ export default async function PortalLayout({ children }: LayoutProps<"/portal">)
   const user = await requireClient();
   const [{ current, memberships }, unread] = await Promise.all([getCurrentOrg(user.id), unreadNotificationCount()]);
 
-  const [proposals, assessment] = current
-    ? await Promise.all([listProposals({ orgId: current.orgId }), getOrgAssessment(current.orgId)])
-    : [[], null];
+  const [proposals, assessment, agreements] = current
+    ? await Promise.all([listProposals({ orgId: current.orgId }), getOrgAssessment(current.orgId), listAgreements({ orgId: current.orgId })])
+    : [[], null, []];
   const openProposals = proposals.filter((p) => displayStatus(p) === "sent").length;
+  const toSign = agreements.filter((a) => a.status === "issued").length;
   // Badge while the pre-assessment needs the client's action.
   const assessmentTodo = assessment && ["not_started", "in_progress", "changes_requested"].includes(assessment.status) ? 1 : 0;
 
@@ -27,6 +29,7 @@ export default async function PortalLayout({ children }: LayoutProps<"/portal">)
     { href: "/portal", label: "Dashboard", exact: true },
     ...(current ? [{ href: "/portal/assessment", label: "Pre-assessment", count: assessmentTodo }] : []),
     ...(current ? [{ href: "/portal/proposals", label: "Proposals", count: openProposals }] : []),
+    ...(current ? [{ href: "/portal/agreements", label: "Agreements", count: toSign }] : []),
     ...(current ? [{ href: "/portal/colleagues", label: "Colleagues" }] : []),
     { href: "/portal/notifications", label: "Notifications", count: unread },
   ];

@@ -6,6 +6,7 @@ import { fmtDate, roleLabel } from "@/modules/inquiries/labels";
 import { listProposals } from "@/modules/proposals/queries";
 import { displayStatus, proposalRef } from "@/modules/proposals/labels";
 import { ASSESSMENT_STATUS, getOrgAssessment } from "@/modules/assessments/queries";
+import { listAgreements } from "@/modules/agreements/queries";
 import { waLink } from "@/lib/site";
 
 // Waits for the login check on the server before sending the page.
@@ -35,7 +36,11 @@ export default async function PortalHome() {
   const supabase = await createClient();
   const { data } = await supabase.rpc("org_overview", { p_org: current.orgId });
   const overview = data as Overview;
-  const [proposals, assessment] = await Promise.all([listProposals({ orgId: current.orgId }), getOrgAssessment(current.orgId)]);
+  const [proposals, assessment, agreements] = await Promise.all([
+    listProposals({ orgId: current.orgId }), getOrgAssessment(current.orgId), listAgreements({ orgId: current.orgId }),
+  ]);
+  const toSign = agreements.find((a) => a.status === "issued");
+  const signed = agreements.some((a) => a.status === "signed");
   const open = proposals.find((p) => displayStatus(p) === "sent");
   const aStatus = assessment?.status ?? "not_started";
   // The tracker takes the furthest point reached: inquiry stage or proposal status.
@@ -43,11 +48,19 @@ export default async function PortalHome() {
     STAGE_STEP[overview?.stage ?? "pre_assessment"] ?? 2,
     open ? 3 : 0,
     proposals.some((p) => p.status === "accepted") ? 4 : 0,
+    signed ? 5 : 0,
   );
   const status = (i: number, before: string, at: string, after: string) => (step < i ? before : step === i ? at : after);
   const firstName = user.fullName?.split(" ")[0];
 
   const nextSteps: { title: string; detail: string; href?: string; cta?: string }[] = [];
+  if (toSign) {
+    nextSteps.push({
+      title: `Sign your agreement: ${toSign.title}`,
+      detail: current.role === "CLIENT_OWNER" ? "Print it, sign and stamp it, then upload the scan." : "An owner of your company signs and uploads it.",
+      href: `/portal/agreements/${toSign.id}`, cta: "Open",
+    });
+  }
   if (open) {
     nextSteps.push({
       title: `Review your proposal: ${open.title}`,
@@ -63,7 +76,7 @@ export default async function PortalHome() {
   } else if (aStatus === "submitted") {
     nextSteps.push({ title: "Atlas is reviewing your pre-assessment", detail: "You will be notified here when it is approved." });
   }
-  if (step >= 3 && !open && aStatus === "approved") nextSteps.push({ title: "Your coordinator will guide you through the next step", detail: "You will be notified here when something needs your attention." });
+  if (step >= 3 && !open && !toSign && aStatus === "approved") nextSteps.push({ title: "Your coordinator will guide you through the next step", detail: "You will be notified here when something needs your attention." });
   if (!user.fullName) nextSteps.push({ title: "Add your name to your profile", detail: "So the Atlas team knows who they are talking to", href: "/account/profile", cta: "Profile" });
   if (current.role === "CLIENT_OWNER") nextSteps.push({ title: "Give colleagues access", detail: "Add your accountant or manager to this portal", href: "/portal/colleagues", cta: "Colleagues" });
 

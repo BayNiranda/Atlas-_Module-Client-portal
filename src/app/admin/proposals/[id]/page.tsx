@@ -10,6 +10,8 @@ import { ProposalDocument } from "@/components/proposal-document";
 import { PrintButton } from "@/components/print-button";
 import { ActionForm } from "@/components/action-form";
 import { ASSESSMENT_STATUS, assessmentTone, getOrgAssessment } from "@/modules/assessments/queries";
+import { AGREEMENT_STATUS, agreementRef, agreementTone, listAgreements } from "@/modules/agreements/queries";
+import { prepareAgreement } from "@/modules/agreements/actions";
 import { editorChoices } from "../data";
 import { ProposalEditor } from "../proposal-editor";
 
@@ -22,10 +24,11 @@ export default async function ProposalPage({ params }: PageProps<"/admin/proposa
   if (!p) notFound();
   const status = displayStatus(p);
   const canSend = user.staffRole === "SUPER_ADMIN" || user.staffRole === "ADMIN";
-  const [versions, choices, assessment] = await Promise.all([
+  const [versions, choices, assessment, agreements] = await Promise.all([
     listVersions(p.number),
     p.status === "draft" ? editorChoices() : null,
     p.status === "draft" ? getOrgAssessment(p.organization_id) : null,
+    p.status === "accepted" ? listAgreements({ proposalId: p.id }) : [],
   ]);
 
   return (
@@ -117,6 +120,26 @@ export default async function ProposalPage({ params }: PageProps<"/admin/proposa
                 {p.decline_reason && (<><dt>Reason</dt><dd className="challenge">{p.decline_reason}</dd></>)}
               </dl>
             </div>
+            {p.status === "accepted" && (
+              <div className="internal" style={{ marginBottom: 16 }}>
+                <b>AGREEMENT</b>
+                {agreements.length ? (
+                  <ul className="notes" style={{ marginTop: 6 }}>
+                    {agreements.map((ag) => (
+                      <li key={ag.id}>
+                        <Link href={`/admin/agreements/${ag.id}`}>{agreementRef(ag)}</Link>{" "}
+                        <span className={`st ${agreementTone(ag.status)}`}>{AGREEMENT_STATUS[ag.status]}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <ActionForm action={prepareAgreement} submit="Prepare agreement">
+                    <input type="hidden" name="proposal_id" value={p.id} />
+                    <p className="muted" style={{ marginTop: 8, marginBottom: 0 }}>Creates a draft service agreement from this proposal and Atlas&apos;s standard wording.</p>
+                  </ActionForm>
+                )}
+              </div>
+            )}
             <VersionList versions={versions} currentId={p.id} />
           </div>
         </div>

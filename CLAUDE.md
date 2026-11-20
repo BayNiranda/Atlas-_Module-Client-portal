@@ -28,6 +28,9 @@ Next.js 16 (App Router, `src/`, `proxy.ts` replaces middleware), TypeScript, Tai
 - Dev database: Supabase project `ffwedanozfenocaxumre` (Seoul region; fake data only). Apply migrations with `npx supabase db push --remote`. Production will be a separate project in Singapore.
 - Auth settings live in `supabase/config.toml`. Always `npx supabase config diff` before `npx supabase config push` (push sends every declared setting; non-auth values in the file are kept equal to the remote on purpose).
 - Invitations and lost-password links are one-time links staff copy or send on WhatsApp (`src/lib/auth/invite.ts`); no email service yet.
+- After `npm run build`, restart the dev server: running both can leave `next dev` serving stale code.
+- Agreements: signed by scan (owner's choice); files in private bucket `agreements`, served only via `/agreements/[id]/file` (60-second links). Issued agreements cannot be deleted, so agreement tests keep their records under the permanent fake company "Agreement Test Co. (automated test)".
+- Agreement wording lives in `src/modules/agreements/template.ts` (from Atlas's own agreement, owner to approve).
 - `npm test` runs RLS tests against the dev project; fixtures refuse to run unless `NEXT_PUBLIC_SITE_URL` is localhost.
 
 ## Layout
