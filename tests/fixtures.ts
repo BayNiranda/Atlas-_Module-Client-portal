@@ -47,6 +47,11 @@ export async function signInAs(key: UserKey): Promise<SupabaseClient> {
 // Staff session that has passed MFA (aal2).
 export async function signInStaffWithMfa(key: UserKey = "staff"): Promise<SupabaseClient> {
   const client = await signInAs(key);
+  // Remove factors from earlier sign-ins in this run (their secrets are gone).
+  const userId = (await client.auth.getUser()).data.user!.id;
+  const svc = serviceClient();
+  const old = await svc.auth.admin.mfa.listFactors({ userId });
+  for (const factor of old.data?.factors ?? []) await svc.auth.admin.mfa.deleteFactor({ id: factor.id, userId });
   const enrolled = await client.auth.mfa.enroll({ factorType: "totp" });
   if (enrolled.error) throw enrolled.error;
   const { error } = await client.auth.mfa.challengeAndVerify({
@@ -125,4 +130,13 @@ async function must<T extends { error: unknown }>(p: PromiseLike<T>): Promise<T>
   const r = await p;
   if (r.error) throw r.error;
   return r;
+}
+
+// Tests that submit web inquiries notify all managers, including the real owner
+// account. Remove those, and anything sent to test users, after each test file.
+export async function cleanupTestNotifications(ids?: Partial<Record<UserKey, string>>) {
+  const svc = serviceClient();
+  await svc.from("notifications").delete().like("body", "%(automated test)%");
+  const userIds = Object.values(ids ?? {}).filter(Boolean) as string[];
+  if (userIds.length) await svc.from("notifications").delete().in("user_id", userIds);
 }

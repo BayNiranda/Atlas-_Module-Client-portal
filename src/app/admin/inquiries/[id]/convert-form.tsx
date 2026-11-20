@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { convertAndInvite, newClientSignInLink } from "@/modules/inquiries/admin-actions";
 import type { ActionResult } from "@/modules/inquiries/admin-schema";
-import { ActionForm } from "../../_components/action-form";
+import { ActionForm } from "@/components/action-form";
 
 type Props = { inquiryId: string; company: string; contact: string; email: string | null };
 

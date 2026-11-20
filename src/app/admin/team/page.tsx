@@ -2,7 +2,7 @@ import { requireStaff } from "@/lib/auth/guards";
 import { listStaff, personName } from "@/modules/inquiries/admin-queries";
 import { roleLabel, STAFF_ROLES } from "@/modules/inquiries/labels";
 import { setStaffAccess } from "@/modules/team/actions";
-import { ActionForm } from "../_components/action-form";
+import { ActionForm } from "@/components/action-form";
 import { InviteStaffForm } from "./invite-staff-form";
 
 // Waits for the login check on the server before sending the page.

@@ -10,7 +10,7 @@ import {
   MANUAL_STAGES, modeLabel, QUALIFICATIONS, sourceLabel, stageLabel,
 } from "@/modules/inquiries/labels";
 import { waTo } from "@/modules/inquiries/whatsapp";
-import { ActionForm } from "../../_components/action-form";
+import { ActionForm } from "@/components/action-form";
 import { StagePill } from "../../_components/pills";
 import { ConvertForm, NewLinkForm } from "./convert-form";
 

@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { anonClient, serviceClient, setupFixtures, signInAs, signInStaffWithMfa } from "./fixtures";
+import { anonClient, serviceClient, setupFixtures, signInAs, signInStaffWithMfa, cleanupTestNotifications } from "./fixtures";
 
 // Module 1: services are public; inquiries are staff-only and can only be
 // created through submit_inquiry(), which only the server may call.
@@ -21,6 +21,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+  await cleanupTestNotifications(undefined);
   if (created.length) await serviceClient().from("inquiries").delete().in("reference", created);
 });
 

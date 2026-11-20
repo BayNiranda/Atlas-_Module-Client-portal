@@ -2,7 +2,7 @@ import Link from "next/link";
 import { MANAGERS, requireStaff } from "@/lib/auth/guards";
 import { createLead } from "@/modules/inquiries/admin-actions";
 import { getPublicServices } from "@/modules/services/queries";
-import { ActionForm } from "../../_components/action-form";
+import { ActionForm } from "@/components/action-form";
 
 // Waits for the login check on the server before sending the page.
 export const instant = false;

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { inviteStaff } from "@/modules/team/actions";
 import { STAFF_ROLES } from "@/modules/inquiries/labels";
-import { ActionForm } from "../_components/action-form";
+import { ActionForm } from "@/components/action-form";
 
 export function InviteStaffForm() {
   return (

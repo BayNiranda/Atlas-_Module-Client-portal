@@ -41,9 +41,12 @@ describe("client of Org A", () => {
     expect(members.every((m) => m.organization_id === fx.orgA)).toBe(true);
   });
 
-  it("sees only their own profile", async () => {
-    const profiles = rows(await ownerA.from("profiles").select("id"));
-    expect(profiles.map((p) => p.id)).toEqual([fx.ids.ownerA]);
+  it("sees their own profile and Org A colleagues only, never Org B people", async () => {
+    // Module 3 rule: clients may see the names of people in their own company.
+    const ids = rows(await ownerA.from("profiles").select("id")).map((p) => p.id);
+    expect(ids).toContain(fx.ids.ownerA);
+    expect(ids.every((id) => id === fx.ids.ownerA || id === fx.ids.memberA)).toBe(true);
+    expect(ids).not.toContain(fx.ids.ownerB);
   });
 
   it("cannot read the audit log", async () => {

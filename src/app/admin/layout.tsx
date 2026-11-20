@@ -1,10 +1,11 @@
-import "./admin.css";
+import "../shell.css";
 import Link from "next/link";
 import { requireStaff } from "@/lib/auth/guards";
 import { createClient } from "@/lib/supabase/server";
 import { signOut } from "@/modules/auth/actions";
 import { roleLabel } from "@/modules/inquiries/labels";
-import { SideNav } from "./_components/side-nav";
+import { unreadNotificationCount } from "@/modules/notifications/queries";
+import { ShellNav, type NavItem } from "@/components/shell-nav";
 
 // Waits for the login check on the server before sending the page.
 export const instant = false;
@@ -12,10 +13,21 @@ export const instant = false;
 export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
   const user = await requireStaff();
   const supabase = await createClient();
-  const { count } = await supabase.from("inquiries").select("id", { count: "exact", head: true }).eq("status", "new");
+  const [{ count: newInquiries }, unread] = await Promise.all([
+    supabase.from("inquiries").select("id", { count: "exact", head: true }).eq("status", "new"),
+    unreadNotificationCount(),
+  ]);
+
+  const items: NavItem[] = [
+    { href: "/admin", label: "Dashboard", exact: true },
+    { href: "/admin/inquiries", label: "Inquiries", count: newInquiries ?? 0 },
+    { href: "/admin/clients", label: "Clients" },
+    { href: "/admin/notifications", label: "Notifications", count: unread },
+    ...(user.staffRole === "SUPER_ADMIN" ? [{ href: "/admin/team", label: "Team" }] : []),
+  ];
 
   return (
-    <div className="admin">
+    <div className="shell">
       <aside className="side">
         <Link className="brand" href="/admin">
           {/* eslint-disable-next-line @next/next/no-img-element -- static logo */}
@@ -23,10 +35,11 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
           <span className="wm"><b>ATLAS</b><em>ADMIN</em></span>
         </Link>
         <div className="grp">Operations</div>
-        <SideNav newCount={count ?? 0} showTeam={user.staffRole === "SUPER_ADMIN"} />
+        <ShellNav items={items} label="Admin" />
         <div className="who">
           <b>{user.fullName ?? user.email}</b>
           {roleLabel(user.staffRole)} · MFA on
+          <div><Link href="/account/profile" className="who-link">My profile</Link></div>
           <form action={signOut}>
             <button type="submit">Sign out</button>
           </form>

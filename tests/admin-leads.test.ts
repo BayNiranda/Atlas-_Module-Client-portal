@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { anonClient, serviceClient, setupFixtures, signInAs, signInStaffWithMfa, type Fixtures } from "./fixtures";
+import { anonClient, serviceClient, setupFixtures, signInAs, signInStaffWithMfa, type Fixtures, cleanupTestNotifications } from "./fixtures";
 
 // Module 2: who may do what with leads, notes, consultations, conversion and roles.
 let fx: Fixtures;
@@ -31,6 +31,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+  await cleanupTestNotifications(fx.ids);
   const svc = serviceClient();
   await svc.from("inquiries").update({ organization_id: null }).in("id", createdInquiries);
   await svc.from("consultations").update({ organization_id: null }).in("inquiry_id", createdInquiries);
