@@ -35,6 +35,7 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
     { href: "/admin/projects", label: "Projects", count: unstaffed ?? 0 },
     { href: "/admin/requests", label: "Requests", count: openRequests ?? 0 },
     { href: "/admin/notifications", label: "Notifications", count: unread },
+    ...(user.staffRole === "SUPER_ADMIN" || user.staffRole === "ADMIN" ? [{ href: "/admin/activity", label: "Activity log" }] : []),
     ...(user.staffRole === "SUPER_ADMIN" ? [{ href: "/admin/team", label: "Team" }] : []),
   ];
 

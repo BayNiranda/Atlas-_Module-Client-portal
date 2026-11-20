@@ -42,9 +42,11 @@ export function MfaForm() {
     setPending(true);
     setError(undefined);
     const code = String(new FormData(e.currentTarget).get("code") ?? "").trim();
-    const { error } = await createClient().auth.mfa.challengeAndVerify({ factorId: setup.factorId, code });
+    const supabase = createClient();
+    const { error } = await supabase.auth.mfa.challengeAndVerify({ factorId: setup.factorId, code });
     setPending(false);
     if (error) return setError("That code did not work. Check the time on your phone and try again.");
+    await supabase.rpc("log_staff_sign_in"); // activity log; a failure here must not block sign-in
     router.replace("/admin");
     router.refresh();
   }
