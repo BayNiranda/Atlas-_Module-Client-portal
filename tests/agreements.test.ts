@@ -45,6 +45,8 @@ beforeAll(async () => {
 afterAll(async () => {
   await cleanupTestNotifications(fx.ids);
   await serviceClient().from("notifications").delete().like("body", `%Agreement Test Co.%`);
+  // Signing creates projects, which notifies every manager (owner included).
+  await serviceClient().from("notifications").delete().like("title", "New projects: Agreement Test Co.%");
 });
 
 describe("preparing", () => {

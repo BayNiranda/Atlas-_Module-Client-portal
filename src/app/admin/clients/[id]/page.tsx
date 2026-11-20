@@ -10,6 +10,8 @@ import { ActionForm } from "@/components/action-form";
 import { DocumentRow } from "@/components/document-row";
 import { DocumentUpload } from "@/components/document-upload";
 import { ReviewDocument } from "../../_components/review-document";
+import { listProjects } from "@/modules/projects/queries";
+import { projectStatusLabel, projectTone } from "@/modules/projects/labels";
 
 // Waits for the login check on the server before sending the page.
 export const instant = false;
@@ -22,7 +24,7 @@ export default async function ClientPage({ params }: PageProps<"/admin/clients/[
   const { data: org } = await supabase.from("organizations").select("id, name").eq("id", id).maybeSingle();
   if (!org) notFound();
 
-  const [requests, docs, signed] = await Promise.all([listRequests(id), listDocuments({ orgId: id }), hasSignedAgreement(id)]);
+  const [requests, docs, signed, projects] = await Promise.all([listRequests(id), listDocuments({ orgId: id }), hasSignedAgreement(id), listProjects({ orgId: id })]);
   const forRequest = (rid: string) => docs.filter((d) => d.request_id === rid);
   const others = docs.filter((d) => !d.request_id);
 
@@ -43,6 +45,16 @@ export default async function ClientPage({ params }: PageProps<"/admin/clients/[
 
       <div className="cols">
         <div>
+          <div className="panel">
+            <h3>Projects</h3>
+            {projects.length ? projects.map((p) => (
+              <div key={p.id} className="request-head">
+                <Link href={`/admin/projects/${p.id}`}>{p.name}</Link>
+                <span className={`st ${projectTone(p.status)}`}>{projectStatusLabel(p.status)}</span>
+              </div>
+            )) : <p className="muted" style={{ margin: 0 }}>None yet. Projects appear when a signed agreement is confirmed.</p>}
+          </div>
+
           <div className="panel">
             <h3>Requested documents</h3>
             {requests.length ? requests.map((r) => (

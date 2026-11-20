@@ -32,7 +32,9 @@ export default async function PortalLayout({ children }: LayoutProps<"/portal">)
     ...(current ? [{ href: "/portal/assessment", label: "Pre-assessment", count: assessmentTodo }] : []),
     ...(current ? [{ href: "/portal/proposals", label: "Proposals", count: openProposals }] : []),
     ...(current ? [{ href: "/portal/agreements", label: "Agreements", count: toSign }] : []),
+    ...(current ? [{ href: "/portal/projects", label: "Projects" }] : []),
     ...(current ? [{ href: "/portal/documents", label: "Documents", count: openRequests }] : []),
+    ...(current ? [{ href: "/portal/requests", label: "Requests" }] : []),
     ...(current ? [{ href: "/portal/colleagues", label: "Colleagues" }] : []),
     { href: "/portal/notifications", label: "Notifications", count: unread },
   ];

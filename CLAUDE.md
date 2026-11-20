@@ -31,6 +31,7 @@ Next.js 16 (App Router, `src/`, `proxy.ts` replaces middleware), TypeScript, Tai
 - After `npm run build`, restart the dev server: running both can leave `next dev` serving stale code.
 - Agreements: signed by scan (owner's choice); files in private bucket `agreements`, served only via `/agreements/[id]/file` (60-second links). Issued agreements cannot be deleted, so agreement tests keep their records under the permanent fake company "Agreement Test Co. (automated test)".
 - Agreement wording lives in `src/modules/agreements/template.ts` (from Atlas's own agreement, owner to approve).
+- Projects: created by a database trigger when an agreement becomes "signed" (one per proposal line, never twice per line; an amendment keeps the first version's projects). Projects are never deleted. Clients see only tasks marked `client_visible`.
 - `npm test` runs RLS tests against the dev project; fixtures refuse to run unless `NEXT_PUBLIC_SITE_URL` is localhost.
 
 ## Layout

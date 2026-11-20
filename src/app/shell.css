@@ -238,3 +238,5 @@ details>summary::-webkit-details-marker{display:none}
 .request-head small{display:block;color:var(--ink3)}
 .review-actions{display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;margin-top:6px}
 .review-actions details{flex:1;min-width:200px}
+.bar{height:8px;background:var(--g1);border-radius:4px;overflow:hidden;margin:12px 0 4px}
+.bar span{display:block;height:100%;background:var(--g7)}
