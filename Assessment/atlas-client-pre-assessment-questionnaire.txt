@@ -1,0 +1,360 @@
+ATLAS ADVISORY — CLIENT PRE-ASSESSMENT QUESTIONNAIRE
+(Website form copy — ready to paste)
+
+====================================================================
+INTRO TEXT (top of form)
+====================================================================
+
+Tell us about your business and the challenges you face.
+This short questionnaire takes about 5–10 minutes and helps us prepare
+for our first conversation and recommend the right service for you.
+
+Your safety comes first:
+- We only ask about your needs and general business situation.
+- We will NEVER ask for bank account numbers, passwords, ID cards,
+  tax ID numbers or financial documents at this stage.
+- Please do not upload or send any documents with this form.
+- If anyone claiming to be Atlas asks you for these details before
+  a signed engagement letter, do not respond — contact us directly.
+
+Fields marked * are required.
+
+
+====================================================================
+SECTION 1 — CONTACT
+====================================================================
+
+1.1  Your name *                              [Short text]
+1.2  Your role in the business *              [Dropdown]
+     - Owner / Founder
+     - Director / Managing Director
+     - Finance / Accounting staff
+     - Other (please specify)
+1.3  Business email *                         [Email]
+1.4  Phone / WhatsApp number *                [Phone]
+1.5  Preferred way to contact you *           [Radio]
+     - Phone call
+     - WhatsApp
+     - Email
+     - Meeting at our office
+1.6  Preferred language *                     [Radio]
+     - Lao
+     - English
+     - Thai
+1.7  How did you hear about Atlas?            [Dropdown]
+     - Referral from a client or friend
+     - Facebook / social media
+     - Google search
+     - Bank or business partner
+     - Event / seminar
+     - Other
+
+
+====================================================================
+SECTION 2 — BUSINESS PROFILE (general information only)
+====================================================================
+
+2.1  Business / trading name *                [Short text]
+2.2  Province / city *                        [Dropdown: list of provinces]
+2.3  Industry *                               [Dropdown]
+     - Trading / Wholesale / Retail
+     - Manufacturing
+     - Construction / Real estate
+     - Hotel / Restaurant / Tourism
+     - Services / Consulting
+     - Agriculture / Plantation
+     - Transport / Logistics
+     - Import / Export
+     - Mining / Energy
+     - Education / Healthcare
+     - NGO / Non-profit
+     - Other (please specify)
+2.4  Briefly describe what your business does *   [Long text, max 300 chars]
+2.5  Type of business *                       [Dropdown]
+     - Individual / Sole enterprise
+     - Limited company (Co., Ltd.)
+     - Sole limited company
+     - Public company
+     - Foreign-invested company
+     - Branch / Representative office
+     - Not yet registered (planning to start)
+     - Not sure
+2.6  How long has the business been operating? *   [Radio]
+     - Not started yet
+     - Less than 1 year
+     - 1–3 years
+     - 3–5 years
+     - More than 5 years
+2.7  Number of employees *                    [Radio]
+     - 1–5
+     - 6–20
+     - 21–50
+     - 51–200
+     - More than 200
+2.8  Approximate annual revenue *             [Radio]
+     - Below 500 million LAK
+     - 500 million – 1 billion LAK
+     - 1 – 5 billion LAK
+     - 5 – 20 billion LAK
+     - Above 20 billion LAK
+     - Prefer not to say
+2.9  Does your business have more than one company, branch or
+     location?                                [Radio]
+     - No, only one
+     - Yes, 2–3
+     - Yes, more than 3
+2.10 Which currencies do you trade in? (tick all)   [Checkbox]
+     - LAK
+     - THB
+     - USD
+     - CNY
+     - Other
+2.11 Main ways you get paid / pay (tick all)  [Checkbox]
+     - Cash
+     - Bank transfer
+     - QR / mobile banking
+     - Credit terms (invoice, pay later)
+2.12 Do you hold inventory / stock?           [Radio: Yes / No]
+2.13 Do you have significant fixed assets (vehicles, machinery,
+     buildings)?                              [Radio: Yes / No]
+
+
+====================================================================
+SECTION 3 — CURRENT ACCOUNTING STATUS
+====================================================================
+
+3.1  Who keeps your books today? *            [Radio]
+     - No one / not keeping books yet
+     - The owner
+     - In-house accountant
+     - External accountant / firm
+     - Other
+3.2  How are your records kept? *             [Radio]
+     - Paper / notebooks
+     - Excel
+     - Accounting software
+     - Mixed
+     - Not sure
+3.3  If software, which one?                  [Dropdown]
+     - Zoho Books
+     - QuickBooks
+     - Xero
+     - Local Lao software
+     - Other
+3.4  How up to date are your books? *         [Radio]
+     - Up to date (within 1 month)
+     - 1–3 months behind
+     - 3–6 months behind
+     - 6–12 months behind
+     - More than 1 year behind
+     - Not sure
+3.5  Are your bank accounts reconciled each month? *   [Radio]
+     - Yes
+     - Sometimes
+     - No
+     - Not sure
+3.6  Roughly how many transactions per month?   [Radio]
+     - Fewer than 50
+     - 50–200
+     - 200–500
+     - More than 500
+     - Not sure
+3.7  Do you receive monthly financial reports (P&L, balance
+     sheet)? *                                [Radio]
+     - Yes, every month
+     - Only at year-end
+     - No
+3.8  Which accounting standard do you report under?   [Radio]
+     - Lao Accounting Standards
+     - IFRS / IFRS for SMEs
+     - Not sure
+3.9  Have your financial statements ever been audited?   [Radio]
+     - Yes, every year
+     - Yes, once or occasionally
+     - No
+     - Not sure
+3.10 How would you rate your current financial records? *   [Scale 1–5]
+     1 = Very poor / disorganized   5 = Excellent
+
+
+====================================================================
+SECTION 4 — TAX & COMPLIANCE STATUS
+====================================================================
+
+4.1  Is your business registered for tax? *   [Radio]
+     - Yes
+     - No
+     - In process
+     - Not sure
+4.2  Are you registered for VAT?              [Radio]
+     - Yes
+     - No
+     - Not sure
+4.3  Are your monthly tax filings up to date? *   [Radio]
+     - Yes, all filed on time
+     - Some are late
+     - Many are late / not filed
+     - Not sure
+4.4  Is your annual tax return / financial statement filed for the
+     last year? *                             [Radio]
+     - Yes
+     - No
+     - Not sure
+4.5  Are you currently facing any of the following? (tick all)   [Checkbox]
+     - Tax penalties or fines
+     - Tax audit / inspection from the tax office
+     - Disagreement with the tax office
+     - Payroll / social security issues
+     - None
+     - Prefer to discuss in person
+4.6  Do you run payroll for employees?        [Radio: Yes / No]
+4.7  Are you regulated by a specific authority (e.g., Bank of Lao PDR,
+     investment promotion, sector ministry)?  [Radio: Yes / No / Not sure]
+
+
+====================================================================
+SECTION 5 — YOUR CHALLENGES
+====================================================================
+
+5.1  What are your biggest financial challenges right now?
+     (tick all that apply) *                  [Checkbox]
+     - My books are behind or messy
+     - I don't know my real profit
+     - Cash flow is tight / I run out of cash
+     - Customers pay late
+     - Tax filing and penalties
+     - Preparing for an audit
+     - Need financial statements for a bank loan
+     - Need reports for investors / partners / shareholders
+     - Costs are too high / margins are falling
+     - No budget or forecast
+     - Weak internal controls / worried about fraud or errors
+     - Inventory is hard to track
+     - Business is growing and the finance function can't keep up
+     - Planning to expand, invest or sell the business
+     - Setting up a new business correctly
+     - Other (please specify)
+5.2  Which ONE challenge is the most urgent? *   [Short text]
+5.3  What has happened because of this problem? (e.g., missed loan,
+     penalties, decisions delayed)            [Long text, max 500 chars]
+5.4  What have you tried so far to fix it?    [Long text, max 500 chars]
+5.5  How do you currently make financial decisions?   [Radio]
+     - Gut feeling / experience
+     - Bank balance
+     - Basic reports
+     - Detailed reports and forecasts
+
+
+====================================================================
+SECTION 6 — SERVICES & GOALS
+====================================================================
+
+6.1  Which services are you interested in? (tick all) *   [Checkbox]
+     - Monthly bookkeeping
+     - Clean-up / catch-up of past records
+     - Monthly / annual tax filing
+     - Payroll processing
+     - Financial statements preparation
+     - Audit preparation support
+     - Budget & cash flow forecasting
+     - Management reporting & KPI dashboard
+     - Part-time / outsourced CFO
+     - Accounting software setup (e.g., Zoho Books)
+     - Internal control review
+     - Business plan / loan application support
+     - Business setup & registration advice
+     - Training for in-house accounting staff
+     - Not sure — please advise me
+6.2  Who will use the reports we prepare? (tick all)   [Checkbox]
+     - Owner / management
+     - Tax office
+     - Bank / lender
+     - Investors / shareholders
+     - Auditor
+     - Government / regulator
+6.3  What would success look like in 12 months?   [Long text, max 500 chars]
+6.4  Business plans in the next 1–2 years (tick all)   [Checkbox]
+     - Stay stable
+     - Grow sales
+     - Open new branch / location
+     - Apply for a bank loan
+     - Bring in investors / partners
+     - Sell or restructure the business
+     - Not decided
+
+
+====================================================================
+SECTION 7 — TIMING & WORKING STYLE
+====================================================================
+
+7.1  When do you need help to start? *        [Radio]
+     - Immediately (urgent)
+     - Within 1 month
+     - Within 3 months
+     - Just exploring
+7.2  Do you have a specific deadline? (e.g., tax due date, bank
+     meeting, audit)                          [Short text]
+7.3  Type of engagement you prefer *          [Radio]
+     - Ongoing monthly service
+     - One-time project
+     - Not sure
+7.4  How often would you like to meet with us?   [Radio]
+     - Weekly
+     - Monthly
+     - Quarterly
+     - Only when needed
+7.5  Preferred way of working                 [Radio]
+     - Fully remote (online)
+     - On-site at my office
+     - Mix of both
+7.6  Approximate monthly budget for financial services   [Radio]
+     - Below 2 million LAK
+     - 2 – 5 million LAK
+     - 5 – 15 million LAK
+     - Above 15 million LAK
+     - Not sure / need a quote
+7.7  Anything else you'd like us to know?     [Long text, max 1000 chars]
+     (Please do NOT include bank details, passwords or ID numbers.)
+
+
+====================================================================
+SECTION 8 — CONSENT
+====================================================================
+
+8.1  [ ] I confirm the information above is general and accurate to
+         the best of my knowledge. *
+8.2  [ ] I agree that Atlas Advisory may contact me about my enquiry
+         and use this information only to prepare a proposal. *
+8.3  [ ] I would like to receive Atlas news and tips (optional).
+
+[ SUBMIT ]
+
+
+====================================================================
+THANK-YOU MESSAGE (after submit)
+====================================================================
+
+Thank you! Our team will review your answers and contact you within
+1–2 working days to arrange a free discovery meeting.
+
+Reminder: Atlas will never ask for passwords, bank account numbers or
+documents by phone, WhatsApp or email before you have met our team and
+signed an engagement letter. If you receive such a request, please
+contact us directly on our official number.
+
+
+====================================================================
+INTERNAL NOTES FOR THE WEBSITE BUILDER (do not publish)
+====================================================================
+
+- Do NOT add any file-upload field to this form.
+- Add CAPTCHA / spam protection and a hidden "honeypot" field.
+- Send submissions only to Atlas's official business email; restrict
+  who can view responses.
+- Set an auto-delete / archive rule for enquiries that don't become
+  clients (e.g., after 12 months).
+- Keep revenue, staff and budget as ranges — never exact amounts.
+- Next step after submission: verify the business exists (public
+  registration / call to the listed number) → discovery meeting →
+  proposal → signed engagement letter → only then full KYC and
+  document collection through a secure channel.

@@ -2,7 +2,6 @@ import "../shell.css";
 import Link from "next/link";
 import { requireStaff } from "@/lib/auth/guards";
 import { createClient } from "@/lib/supabase/server";
-import { signOut } from "@/modules/auth/actions";
 import { roleLabel } from "@/modules/inquiries/labels";
 import { unreadNotificationCount } from "@/modules/notifications/queries";
 import { ShellNav, type NavItem } from "@/components/shell-nav";
@@ -13,8 +12,9 @@ export const instant = false;
 export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
   const user = await requireStaff();
   const supabase = await createClient();
-  const [{ count: newInquiries }, unread] = await Promise.all([
+  const [{ count: newInquiries }, { count: toReview }, unread] = await Promise.all([
     supabase.from("inquiries").select("id", { count: "exact", head: true }).eq("status", "new"),
+    supabase.from("assessments").select("id", { count: "exact", head: true }).eq("status", "submitted"),
     unreadNotificationCount(),
   ]);
 
@@ -22,6 +22,8 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
     { href: "/admin", label: "Dashboard", exact: true },
     { href: "/admin/inquiries", label: "Inquiries", count: newInquiries ?? 0 },
     { href: "/admin/clients", label: "Clients" },
+    { href: "/admin/assessments", label: "Pre-assessments", count: toReview ?? 0 },
+    { href: "/admin/proposals", label: "Proposals" },
     { href: "/admin/notifications", label: "Notifications", count: unread },
     ...(user.staffRole === "SUPER_ADMIN" ? [{ href: "/admin/team", label: "Team" }] : []),
   ];
@@ -40,7 +42,7 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
           <b>{user.fullName ?? user.email}</b>
           {roleLabel(user.staffRole)} · MFA on
           <div><Link href="/account/profile" className="who-link">My profile</Link></div>
-          <form action={signOut}>
+          <form action="/auth/signout" method="post">
             <button type="submit">Sign out</button>
           </form>
         </div>

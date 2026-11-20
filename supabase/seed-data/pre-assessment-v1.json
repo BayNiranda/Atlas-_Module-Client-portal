@@ -1,0 +1,178 @@
+{
+  "title": "Client pre-assessment questionnaire",
+  "intro": [
+    "Tell us about your business and the challenges you face. This short questionnaire takes about 5–10 minutes and helps us prepare for our first conversation and recommend the right service for you."
+  ],
+  "safety_title": "Your safety comes first:",
+  "safety": [
+    "We only ask about your needs and general business situation.",
+    "We will NEVER ask for bank account numbers, passwords, ID cards, tax ID numbers or financial documents at this stage.",
+    "Please do not upload or send any documents with this form.",
+    "If anyone claiming to be Atlas asks you for these details before a signed engagement letter, do not respond — contact us directly."
+  ],
+  "required_note": "Fields marked * are required.",
+  "thank_you": [
+    "Thank you! Our team will review your answers and contact you within 1–2 working days to arrange a free discovery meeting.",
+    "Reminder: Atlas will never ask for passwords, bank account numbers or documents by phone, WhatsApp or email before you have met our team and signed an engagement letter. If you receive such a request, please contact us directly on our official number."
+  ],
+  "sections": [
+    {
+      "id": "s1",
+      "title": "Contact",
+      "questions": [
+        { "id": "1.1", "label": "Your name", "type": "short_text", "required": true, "max": 120, "prefill": "contact_name" },
+        { "id": "1.2", "label": "Your role in the business", "type": "select", "required": true,
+          "options": ["Owner / Founder", "Director / Managing Director", "Finance / Accounting staff", "Other (please specify)"], "other": "Other (please specify)" },
+        { "id": "1.3", "label": "Business email", "type": "email", "required": true, "prefill": "email" },
+        { "id": "1.4", "label": "Phone / WhatsApp number", "type": "phone", "required": true, "prefill": "phone" },
+        { "id": "1.5", "label": "Preferred way to contact you", "type": "radio", "required": true,
+          "options": ["Phone call", "WhatsApp", "Email", "Meeting at our office"] },
+        { "id": "1.6", "label": "Preferred language", "type": "radio", "required": true, "options": ["Lao", "English", "Thai"] },
+        { "id": "1.7", "label": "How did you hear about Atlas?", "type": "select", "required": false,
+          "options": ["Referral from a client or friend", "Facebook / social media", "Google search", "Bank or business partner", "Event / seminar", "Other"] }
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "Business profile (general information only)",
+      "questions": [
+        { "id": "2.1", "label": "Business / trading name", "type": "short_text", "required": true, "max": 200, "prefill": "company_name" },
+        { "id": "2.2", "label": "Province / city", "type": "select", "required": true,
+          "options": ["Vientiane Capital", "Attapeu", "Bokeo", "Bolikhamxay", "Champasak", "Houaphanh", "Khammouane", "Luang Namtha",
+                      "Luang Prabang", "Oudomxay", "Phongsaly", "Salavan", "Savannakhet", "Sekong", "Vientiane Province",
+                      "Xaiyabouly", "Xaisomboun", "Xiengkhouang"] },
+        { "id": "2.3", "label": "Industry", "type": "select", "required": true,
+          "options": ["Trading / Wholesale / Retail", "Manufacturing", "Construction / Real estate", "Hotel / Restaurant / Tourism",
+                      "Services / Consulting", "Agriculture / Plantation", "Transport / Logistics", "Import / Export", "Mining / Energy",
+                      "Education / Healthcare", "NGO / Non-profit", "Other (please specify)"], "other": "Other (please specify)" },
+        { "id": "2.4", "label": "Briefly describe what your business does", "type": "long_text", "required": true, "max": 300 },
+        { "id": "2.5", "label": "Type of business", "type": "select", "required": true,
+          "options": ["Individual / Sole enterprise", "Limited company (Co., Ltd.)", "Sole limited company", "Public company",
+                      "Foreign-invested company", "Branch / Representative office", "Not yet registered (planning to start)", "Not sure"] },
+        { "id": "2.6", "label": "How long has the business been operating?", "type": "radio", "required": true,
+          "options": ["Not started yet", "Less than 1 year", "1–3 years", "3–5 years", "More than 5 years"] },
+        { "id": "2.7", "label": "Number of employees", "type": "radio", "required": true,
+          "options": ["1–5", "6–20", "21–50", "51–200", "More than 200"] },
+        { "id": "2.8", "label": "Approximate annual revenue", "type": "radio", "required": true,
+          "options": ["Below 500 million LAK", "500 million – 1 billion LAK", "1 – 5 billion LAK", "5 – 20 billion LAK", "Above 20 billion LAK", "Prefer not to say"] },
+        { "id": "2.9", "label": "Does your business have more than one company, branch or location?", "type": "radio", "required": false,
+          "options": ["No, only one", "Yes, 2–3", "Yes, more than 3"] },
+        { "id": "2.10", "label": "Which currencies do you trade in? (tick all)", "type": "checkbox", "required": false,
+          "options": ["LAK", "THB", "USD", "CNY", "Other"] },
+        { "id": "2.11", "label": "Main ways you get paid / pay (tick all)", "type": "checkbox", "required": false,
+          "options": ["Cash", "Bank transfer", "QR / mobile banking", "Credit terms (invoice, pay later)"] },
+        { "id": "2.12", "label": "Do you hold inventory / stock?", "type": "radio", "required": false, "options": ["Yes", "No"] },
+        { "id": "2.13", "label": "Do you have significant fixed assets (vehicles, machinery, buildings)?", "type": "radio", "required": false, "options": ["Yes", "No"] }
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "Current accounting status",
+      "questions": [
+        { "id": "3.1", "label": "Who keeps your books today?", "type": "radio", "required": true,
+          "options": ["No one / not keeping books yet", "The owner", "In-house accountant", "External accountant / firm", "Other"] },
+        { "id": "3.2", "label": "How are your records kept?", "type": "radio", "required": true,
+          "options": ["Paper / notebooks", "Excel", "Accounting software", "Mixed", "Not sure"] },
+        { "id": "3.3", "label": "If software, which one?", "type": "select", "required": false,
+          "options": ["Zoho Books", "QuickBooks", "Xero", "Local Lao software", "Other"] },
+        { "id": "3.4", "label": "How up to date are your books?", "type": "radio", "required": true,
+          "options": ["Up to date (within 1 month)", "1–3 months behind", "3–6 months behind", "6–12 months behind", "More than 1 year behind", "Not sure"] },
+        { "id": "3.5", "label": "Are your bank accounts reconciled each month?", "type": "radio", "required": true,
+          "options": ["Yes", "Sometimes", "No", "Not sure"] },
+        { "id": "3.6", "label": "Roughly how many transactions per month?", "type": "radio", "required": false,
+          "options": ["Fewer than 50", "50–200", "200–500", "More than 500", "Not sure"] },
+        { "id": "3.7", "label": "Do you receive monthly financial reports (P&L, balance sheet)?", "type": "radio", "required": true,
+          "options": ["Yes, every month", "Only at year-end", "No"] },
+        { "id": "3.8", "label": "Which accounting standard do you report under?", "type": "radio", "required": false,
+          "options": ["Lao Accounting Standards", "IFRS / IFRS for SMEs", "Not sure"] },
+        { "id": "3.9", "label": "Have your financial statements ever been audited?", "type": "radio", "required": false,
+          "options": ["Yes, every year", "Yes, once or occasionally", "No", "Not sure"] },
+        { "id": "3.10", "label": "How would you rate your current financial records?", "type": "scale", "required": true,
+          "min": 1, "max": 5, "min_label": "Very poor / disorganized", "max_label": "Excellent" }
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "Tax & compliance status",
+      "questions": [
+        { "id": "4.1", "label": "Is your business registered for tax?", "type": "radio", "required": true,
+          "options": ["Yes", "No", "In process", "Not sure"] },
+        { "id": "4.2", "label": "Are you registered for VAT?", "type": "radio", "required": false, "options": ["Yes", "No", "Not sure"] },
+        { "id": "4.3", "label": "Are your monthly tax filings up to date?", "type": "radio", "required": true,
+          "options": ["Yes, all filed on time", "Some are late", "Many are late / not filed", "Not sure"] },
+        { "id": "4.4", "label": "Is your annual tax return / financial statement filed for the last year?", "type": "radio", "required": true,
+          "options": ["Yes", "No", "Not sure"] },
+        { "id": "4.5", "label": "Are you currently facing any of the following? (tick all)", "type": "checkbox", "required": false,
+          "options": ["Tax penalties or fines", "Tax audit / inspection from the tax office", "Disagreement with the tax office",
+                      "Payroll / social security issues", "None", "Prefer to discuss in person"] },
+        { "id": "4.6", "label": "Do you run payroll for employees?", "type": "radio", "required": false, "options": ["Yes", "No"] },
+        { "id": "4.7", "label": "Are you regulated by a specific authority (e.g., Bank of Lao PDR, investment promotion, sector ministry)?",
+          "type": "radio", "required": false, "options": ["Yes", "No", "Not sure"] }
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "Your challenges",
+      "questions": [
+        { "id": "5.1", "label": "What are your biggest financial challenges right now? (tick all that apply)", "type": "checkbox", "required": true,
+          "options": ["My books are behind or messy", "I don't know my real profit", "Cash flow is tight / I run out of cash",
+                      "Customers pay late", "Tax filing and penalties", "Preparing for an audit", "Need financial statements for a bank loan",
+                      "Need reports for investors / partners / shareholders", "Costs are too high / margins are falling",
+                      "No budget or forecast", "Weak internal controls / worried about fraud or errors", "Inventory is hard to track",
+                      "Business is growing and the finance function can't keep up", "Planning to expand, invest or sell the business",
+                      "Setting up a new business correctly", "Other (please specify)"], "other": "Other (please specify)" },
+        { "id": "5.2", "label": "Which ONE challenge is the most urgent?", "type": "short_text", "required": true, "max": 200 },
+        { "id": "5.3", "label": "What has happened because of this problem? (e.g., missed loan, penalties, decisions delayed)", "type": "long_text", "required": false, "max": 500 },
+        { "id": "5.4", "label": "What have you tried so far to fix it?", "type": "long_text", "required": false, "max": 500 },
+        { "id": "5.5", "label": "How do you currently make financial decisions?", "type": "radio", "required": false,
+          "options": ["Gut feeling / experience", "Bank balance", "Basic reports", "Detailed reports and forecasts"] }
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "Services & goals",
+      "questions": [
+        { "id": "6.1", "label": "Which services are you interested in? (tick all)", "type": "checkbox", "required": true,
+          "options": ["Monthly bookkeeping", "Clean-up / catch-up of past records", "Monthly / annual tax filing", "Payroll processing",
+                      "Financial statements preparation", "Audit preparation support", "Budget & cash flow forecasting",
+                      "Management reporting & KPI dashboard", "Part-time / outsourced CFO", "Accounting software setup (e.g., Zoho Books)",
+                      "Internal control review", "Business plan / loan application support", "Business setup & registration advice",
+                      "Training for in-house accounting staff", "Not sure — please advise me"] },
+        { "id": "6.2", "label": "Who will use the reports we prepare? (tick all)", "type": "checkbox", "required": false,
+          "options": ["Owner / management", "Tax office", "Bank / lender", "Investors / shareholders", "Auditor", "Government / regulator"] },
+        { "id": "6.3", "label": "What would success look like in 12 months?", "type": "long_text", "required": false, "max": 500 },
+        { "id": "6.4", "label": "Business plans in the next 1–2 years (tick all)", "type": "checkbox", "required": false,
+          "options": ["Stay stable", "Grow sales", "Open new branch / location", "Apply for a bank loan", "Bring in investors / partners",
+                      "Sell or restructure the business", "Not decided"] }
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "Timing & working style",
+      "questions": [
+        { "id": "7.1", "label": "When do you need help to start?", "type": "radio", "required": true,
+          "options": ["Immediately (urgent)", "Within 1 month", "Within 3 months", "Just exploring"] },
+        { "id": "7.2", "label": "Do you have a specific deadline? (e.g., tax due date, bank meeting, audit)", "type": "short_text", "required": false, "max": 200 },
+        { "id": "7.3", "label": "Type of engagement you prefer", "type": "radio", "required": true,
+          "options": ["Ongoing monthly service", "One-time project", "Not sure"] },
+        { "id": "7.4", "label": "How often would you like to meet with us?", "type": "radio", "required": false,
+          "options": ["Weekly", "Monthly", "Quarterly", "Only when needed"] },
+        { "id": "7.5", "label": "Preferred way of working", "type": "radio", "required": false,
+          "options": ["Fully remote (online)", "On-site at my office", "Mix of both"] },
+        { "id": "7.6", "label": "Approximate monthly budget for financial services", "type": "radio", "required": false,
+          "options": ["Below 2 million LAK", "2 – 5 million LAK", "5 – 15 million LAK", "Above 15 million LAK", "Not sure / need a quote"] },
+        { "id": "7.7", "label": "Anything else you'd like us to know?", "type": "long_text", "required": false, "max": 1000,
+          "help": "Please do NOT include bank details, passwords or ID numbers." }
+      ]
+    },
+    {
+      "id": "s8",
+      "title": "Consent",
+      "questions": [
+        { "id": "8.1", "label": "I confirm the information above is general and accurate to the best of my knowledge.", "type": "consent", "required": true },
+        { "id": "8.2", "label": "I agree that Atlas Advisory may contact me about my enquiry and use this information only to prepare a proposal.", "type": "consent", "required": true },
+        { "id": "8.3", "label": "I would like to receive Atlas news and tips (optional).", "type": "consent", "required": false }
+      ]
+    }
+  ]
+}

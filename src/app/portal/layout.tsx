@@ -1,10 +1,12 @@
 import "../shell.css";
 import Link from "next/link";
 import { requireClient } from "@/lib/auth/guards";
-import { signOut } from "@/modules/auth/actions";
 import { getCurrentOrg } from "@/modules/portal/org";
 import { unreadNotificationCount } from "@/modules/notifications/queries";
 import { ShellNav, type NavItem } from "@/components/shell-nav";
+import { listProposals } from "@/modules/proposals/queries";
+import { displayStatus } from "@/modules/proposals/labels";
+import { getOrgAssessment } from "@/modules/assessments/queries";
 import { OrgSwitcher } from "./org-switcher";
 
 // Waits for the login check on the server before sending the page.
@@ -14,8 +16,17 @@ export default async function PortalLayout({ children }: LayoutProps<"/portal">)
   const user = await requireClient();
   const [{ current, memberships }, unread] = await Promise.all([getCurrentOrg(user.id), unreadNotificationCount()]);
 
+  const [proposals, assessment] = current
+    ? await Promise.all([listProposals({ orgId: current.orgId }), getOrgAssessment(current.orgId)])
+    : [[], null];
+  const openProposals = proposals.filter((p) => displayStatus(p) === "sent").length;
+  // Badge while the pre-assessment needs the client's action.
+  const assessmentTodo = assessment && ["not_started", "in_progress", "changes_requested"].includes(assessment.status) ? 1 : 0;
+
   const items: NavItem[] = [
     { href: "/portal", label: "Dashboard", exact: true },
+    ...(current ? [{ href: "/portal/assessment", label: "Pre-assessment", count: assessmentTodo }] : []),
+    ...(current ? [{ href: "/portal/proposals", label: "Proposals", count: openProposals }] : []),
     ...(current ? [{ href: "/portal/colleagues", label: "Colleagues" }] : []),
     { href: "/portal/notifications", label: "Notifications", count: unread },
   ];
@@ -38,7 +49,7 @@ export default async function PortalLayout({ children }: LayoutProps<"/portal">)
           <b>{user.fullName ?? user.email}</b>
           {current ? (current.role === "CLIENT_OWNER" ? "Company owner" : "Company member") : "Client"}
           <div><Link href="/account/profile" className="who-link">My profile</Link></div>
-          <form action={signOut}>
+          <form action="/auth/signout" method="post">
             <button type="submit">Sign out</button>
           </form>
         </div>

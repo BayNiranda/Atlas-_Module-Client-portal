@@ -25,11 +25,7 @@ export async function signIn(_prev: FormState, formData: FormData): Promise<Form
   redirect(homeFor(user));
 }
 
-export async function signOut() {
-  const supabase = await createClient();
-  await supabase.auth.signOut();
-  redirect("/login");
-}
+// Sign-out is a route handler (app/auth/signout) so it reloads the whole page.
 
 // Used after an invitation or password-reset link (see app/auth/confirm).
 export async function setPassword(_prev: FormState, formData: FormData): Promise<FormState> {

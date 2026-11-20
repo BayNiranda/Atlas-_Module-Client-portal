@@ -36,7 +36,7 @@ export default async function ClientsPage() {
           <tbody>
             {orgs.map((o) => (
               <tr key={o.id}>
-                <td><b>{o.name}</b></td>
+                <td><b>{o.name}</b><small><Link href={`/admin/proposals/new?org=${o.id}`}>New proposal</Link></small></td>
                 <td>
                   {o.organization_members.map((m, idx) => (
                     <small key={idx}>

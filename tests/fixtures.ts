@@ -140,3 +140,10 @@ export async function cleanupTestNotifications(ids?: Partial<Record<UserKey, str
   const userIds = Object.values(ids ?? {}).filter(Boolean) as string[];
   if (userIds.length) await svc.from("notifications").delete().in("user_id", userIds);
 }
+
+// Pre-assessment of a test company back to "not started" (status first: approved answers are locked).
+export async function resetAssessment(orgId: string) {
+  const svc = serviceClient();
+  await svc.from("assessments").update({ status: "not_started" }).eq("organization_id", orgId);
+  await svc.from("assessments").update({ answers: {}, submitted_at: null, submitted_by: null, reviewed_at: null, reviewed_by: null, review_comment: null }).eq("organization_id", orgId);
+}
