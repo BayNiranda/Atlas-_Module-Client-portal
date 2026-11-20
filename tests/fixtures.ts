@@ -12,8 +12,16 @@ export const USERS = {
   memberA: { email: "cems-test-member-a@example.com", name: "Test Member A" },
   ownerB: { email: "cems-test-owner-b@example.com", name: "Test Owner B" },
   staff: { email: "cems-test-staff@example.com", name: "Test Staff Admin" },
+  consultant: { email: "cems-test-consultant@example.com", name: "Test Consultant" },
+  superAdmin: { email: "cems-test-superadmin@example.com", name: "Test Super Admin" },
+  convertClient: { email: "cems-test-convert-client@example.com", name: "Test Converted Client" },
 } as const;
-type UserKey = keyof typeof USERS;
+
+// Staff test users and their roles (everyone else is a client or has no role).
+const STAFF_ROLES: Partial<Record<keyof typeof USERS, string>> = {
+  staff: "ADMIN", consultant: "CONSULTANT", superAdmin: "SUPER_ADMIN",
+};
+export type UserKey = keyof typeof USERS;
 
 export const ORG_A = "Test Org A (fake)";
 export const ORG_B = "Test Org B (fake)";
@@ -37,8 +45,8 @@ export async function signInAs(key: UserKey): Promise<SupabaseClient> {
 }
 
 // Staff session that has passed MFA (aal2).
-export async function signInStaffWithMfa(): Promise<SupabaseClient> {
-  const client = await signInAs("staff");
+export async function signInStaffWithMfa(key: UserKey = "staff"): Promise<SupabaseClient> {
+  const client = await signInAs(key);
   const enrolled = await client.auth.mfa.enroll({ factorType: "totp" });
   if (enrolled.error) throw enrolled.error;
   const { error } = await client.auth.mfa.challengeAndVerify({
@@ -81,11 +89,13 @@ export async function setupFixtures(): Promise<Fixtures> {
     ids[key] = id;
   }
 
-  // Staff test user: ADMIN role, no MFA factors left over from earlier runs.
-  await must(admin.from("profiles").update({ staff_role: "ADMIN", is_active: true }).eq("id", ids.staff));
-  const factors = await admin.auth.admin.mfa.listFactors({ userId: ids.staff });
-  for (const f of factors.data?.factors ?? []) {
-    await admin.auth.admin.mfa.deleteFactor({ id: f.id, userId: ids.staff });
+  // Staff test users: their role, and no MFA factors left over from earlier runs.
+  for (const [key, role] of Object.entries(STAFF_ROLES) as [UserKey, string][]) {
+    await must(admin.from("profiles").update({ staff_role: role, is_active: true }).eq("id", ids[key]));
+    const factors = await admin.auth.admin.mfa.listFactors({ userId: ids[key] });
+    for (const f of factors.data?.factors ?? []) {
+      await admin.auth.admin.mfa.deleteFactor({ id: f.id, userId: ids[key] });
+    }
   }
 
   const orgA = await ensureOrg(admin, ORG_A);

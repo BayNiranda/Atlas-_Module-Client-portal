@@ -26,6 +26,8 @@ Next.js 16 (App Router, `src/`, `proxy.ts` replaces middleware), TypeScript, Tai
 ## Environment
 - Windows PowerShell blocks `npx.ps1`/`npm.ps1`: use `npx.cmd` / `npm.cmd` in the owner's terminal.
 - Dev database: Supabase project `ffwedanozfenocaxumre` (Seoul region; fake data only). Apply migrations with `npx supabase db push --remote`. Production will be a separate project in Singapore.
+- Auth settings live in `supabase/config.toml`. Always `npx supabase config diff` before `npx supabase config push` (push sends every declared setting; non-auth values in the file are kept equal to the remote on purpose).
+- Invitations and lost-password links are one-time links staff copy or send on WhatsApp (`src/lib/auth/invite.ts`); no email service yet.
 - `npm test` runs RLS tests against the dev project; fixtures refuse to run unless `NEXT_PUBLIC_SITE_URL` is localhost.
 
 ## Layout

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { parseInquiryForm } from "@/modules/inquiries/schema";
 import { vatSplit } from "@/app/(public)/_components/vat-calculator";
+import { waNumber } from "@/modules/inquiries/whatsapp";
 
 function form(overrides: Record<string, string | string[] | null> = {}) {
   const base: Record<string, string | string[] | null> = {
@@ -38,6 +39,13 @@ describe("inquiry form rules", () => {
   });
   it("rejects service values that are not simple slugs", () => {
     expect(errorsOf(form({ services: ["accounting'; drop table--"] }))).toContain("services");
+  });
+});
+
+describe("WhatsApp numbers", () => {
+  it("turns a local Lao number into the international form", () => {
+    expect(waNumber("020 5555 0101")).toBe("8562055550101");
+    expect(waNumber("+856 20 5555 0101")).toBe("8562055550101");
   });
 });
 

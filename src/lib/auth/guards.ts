@@ -1,12 +1,15 @@
 import "server-only";
 import { cache } from "react";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
 export type StaffRole = "SUPER_ADMIN" | "ADMIN" | "PROJECT_COORDINATOR" | "CONSULTANT";
 
 // One lookup per request, however many times a page or layout asks.
 export const getCurrentUser = cache(async () => {
+  // Who is logged in is only known per request: never prerender past this point.
+  await connection();
   const supabase = await createClient();
   const { data } = await supabase.auth.getClaims();
   const claims = data?.claims;
@@ -41,6 +44,17 @@ export async function requireStaff(allowed?: StaffRole[]) {
   if (!user.staffRole) redirect("/portal");
   if (!user.mfaPassed) redirect("/mfa");
   if (allowed && !allowed.includes(user.staffRole)) redirect("/admin");
+  return user as typeof user & { staffRole: StaffRole };
+}
+
+// Roles that manage leads and clients (the permission matrix's "coordinator and above").
+export const MANAGERS: StaffRole[] = ["SUPER_ADMIN", "ADMIN", "PROJECT_COORDINATOR"];
+
+// For server actions: returns the staff user, or null if not allowed (no redirect).
+export async function staffForAction(allowed?: StaffRole[]) {
+  const user = await getCurrentUser();
+  if (!user?.staffRole || !user.mfaPassed) return null;
+  if (allowed && !allowed.includes(user.staffRole)) return null;
   return user as typeof user & { staffRole: StaffRole };
 }
 
