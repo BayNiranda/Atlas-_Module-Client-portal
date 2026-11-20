@@ -1,0 +1,118 @@
+import { randomBytes } from "node:crypto";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { totp } from "./totp";
+
+// Invented test data only. Never real clients.
+const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!;
+const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+
+export const USERS = {
+  ownerA: { email: "cems-test-owner-a@example.com", name: "Test Owner A" },
+  memberA: { email: "cems-test-member-a@example.com", name: "Test Member A" },
+  ownerB: { email: "cems-test-owner-b@example.com", name: "Test Owner B" },
+  staff: { email: "cems-test-staff@example.com", name: "Test Staff Admin" },
+} as const;
+type UserKey = keyof typeof USERS;
+
+export const ORG_A = "Test Org A (fake)";
+export const ORG_B = "Test Org B (fake)";
+
+// Fresh random password each run, so no test credentials are stored anywhere.
+const password = randomBytes(24).toString("base64url");
+
+export function serviceClient() {
+  return createClient(url, serviceKey, { auth: { persistSession: false, autoRefreshToken: false } });
+}
+
+export function anonClient() {
+  return createClient(url, publishableKey, { auth: { persistSession: false, autoRefreshToken: false } });
+}
+
+export async function signInAs(key: UserKey): Promise<SupabaseClient> {
+  const client = anonClient();
+  const { error } = await client.auth.signInWithPassword({ email: USERS[key].email, password });
+  if (error) throw new Error(`Sign-in failed for ${key}: ${error.message}`);
+  return client;
+}
+
+// Staff session that has passed MFA (aal2).
+export async function signInStaffWithMfa(): Promise<SupabaseClient> {
+  const client = await signInAs("staff");
+  const enrolled = await client.auth.mfa.enroll({ factorType: "totp" });
+  if (enrolled.error) throw enrolled.error;
+  const { error } = await client.auth.mfa.challengeAndVerify({
+    factorId: enrolled.data.id,
+    code: totp(enrolled.data.totp.secret),
+  });
+  if (error) throw error;
+  return client;
+}
+
+export type Fixtures = { ids: Record<UserKey, string>; orgA: string; orgB: string };
+
+export async function setupFixtures(): Promise<Fixtures> {
+  if (!url || !publishableKey || !serviceKey) {
+    throw new Error("Missing Supabase settings. Copy .env.example to .env.local and fill it in.");
+  }
+  // Safety: only the dev project. Production has a non-localhost site URL.
+  if (!process.env.NEXT_PUBLIC_SITE_URL?.startsWith("http://localhost")) {
+    throw new Error("Refusing to create test data: NEXT_PUBLIC_SITE_URL is not localhost.");
+  }
+
+  const admin = serviceClient();
+  const { data: list, error: listError } = await admin.auth.admin.listUsers({ perPage: 1000 });
+  if (listError) throw listError;
+
+  const ids = {} as Record<UserKey, string>;
+  for (const key of Object.keys(USERS) as UserKey[]) {
+    const { email, name } = USERS[key];
+    let id = list.users.find((u) => u.email === email)?.id;
+    if (!id) {
+      const created = await admin.auth.admin.createUser({
+        email, password, email_confirm: true, user_metadata: { full_name: name },
+      });
+      if (created.error) throw created.error;
+      id = created.data.user.id;
+    } else {
+      const updated = await admin.auth.admin.updateUserById(id, { password });
+      if (updated.error) throw updated.error;
+    }
+    ids[key] = id;
+  }
+
+  // Staff test user: ADMIN role, no MFA factors left over from earlier runs.
+  await must(admin.from("profiles").update({ staff_role: "ADMIN", is_active: true }).eq("id", ids.staff));
+  const factors = await admin.auth.admin.mfa.listFactors({ userId: ids.staff });
+  for (const f of factors.data?.factors ?? []) {
+    await admin.auth.admin.mfa.deleteFactor({ id: f.id, userId: ids.staff });
+  }
+
+  const orgA = await ensureOrg(admin, ORG_A);
+  const orgB = await ensureOrg(admin, ORG_B);
+  await must(
+    admin.from("organization_members").upsert(
+      [
+        { organization_id: orgA, user_id: ids.ownerA, role: "CLIENT_OWNER", status: "active" },
+        { organization_id: orgA, user_id: ids.memberA, role: "CLIENT_MEMBER", status: "active" },
+        { organization_id: orgB, user_id: ids.ownerB, role: "CLIENT_OWNER", status: "active" },
+      ],
+      { onConflict: "organization_id,user_id" },
+    ),
+  );
+  return { ids, orgA, orgB };
+}
+
+async function ensureOrg(admin: SupabaseClient, name: string): Promise<string> {
+  const { data } = await admin.from("organizations").select("id").eq("name", name).maybeSingle();
+  if (data) return data.id;
+  const inserted = await admin.from("organizations").insert({ name }).select("id").single();
+  if (inserted.error) throw inserted.error;
+  return inserted.data.id;
+}
+
+async function must<T extends { error: unknown }>(p: PromiseLike<T>): Promise<T> {
+  const r = await p;
+  if (r.error) throw r.error;
+  return r;
+}
