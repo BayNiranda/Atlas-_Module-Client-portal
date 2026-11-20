@@ -8,6 +8,7 @@ import { listProposals } from "@/modules/proposals/queries";
 import { displayStatus } from "@/modules/proposals/labels";
 import { getOrgAssessment } from "@/modules/assessments/queries";
 import { listAgreements } from "@/modules/agreements/queries";
+import { listRequests } from "@/modules/documents/queries";
 import { OrgSwitcher } from "./org-switcher";
 
 // Waits for the login check on the server before sending the page.
@@ -17,9 +18,10 @@ export default async function PortalLayout({ children }: LayoutProps<"/portal">)
   const user = await requireClient();
   const [{ current, memberships }, unread] = await Promise.all([getCurrentOrg(user.id), unreadNotificationCount()]);
 
-  const [proposals, assessment, agreements] = current
-    ? await Promise.all([listProposals({ orgId: current.orgId }), getOrgAssessment(current.orgId), listAgreements({ orgId: current.orgId })])
-    : [[], null, []];
+  const [proposals, assessment, agreements, requests] = current
+    ? await Promise.all([listProposals({ orgId: current.orgId }), getOrgAssessment(current.orgId), listAgreements({ orgId: current.orgId }), listRequests(current.orgId)])
+    : [[], null, [], []];
+  const openRequests = requests.filter((r) => r.status === "open").length;
   const openProposals = proposals.filter((p) => displayStatus(p) === "sent").length;
   const toSign = agreements.filter((a) => a.status === "issued").length;
   // Badge while the pre-assessment needs the client's action.
@@ -30,6 +32,7 @@ export default async function PortalLayout({ children }: LayoutProps<"/portal">)
     ...(current ? [{ href: "/portal/assessment", label: "Pre-assessment", count: assessmentTodo }] : []),
     ...(current ? [{ href: "/portal/proposals", label: "Proposals", count: openProposals }] : []),
     ...(current ? [{ href: "/portal/agreements", label: "Agreements", count: toSign }] : []),
+    ...(current ? [{ href: "/portal/documents", label: "Documents", count: openRequests }] : []),
     ...(current ? [{ href: "/portal/colleagues", label: "Colleagues" }] : []),
     { href: "/portal/notifications", label: "Notifications", count: unread },
   ];

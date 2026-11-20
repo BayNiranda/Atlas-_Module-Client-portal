@@ -229,3 +229,12 @@ details>summary::-webkit-details-marker{display:none}
 .file-row small{display:block;color:var(--ink3);overflow-wrap:anywhere}
 @media (max-width:700px){.ag-signatures{grid-template-columns:1fr}}
 @media print{.agreement .ag-article,.agreement tr{break-inside:avoid}}
+
+/* Documents */
+.note-box{background:var(--au0);border:1px solid var(--au1);border-radius:10px;padding:12px 14px;margin-bottom:16px;max-width:980px;font-size:14px}
+.request{border-top:1px solid var(--line);padding:12px 0}
+.request:first-of-type{border-top:0;padding-top:4px}
+.request-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:6px}
+.request-head small{display:block;color:var(--ink3)}
+.review-actions{display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;margin-top:6px}
+.review-actions details{flex:1;min-width:200px}

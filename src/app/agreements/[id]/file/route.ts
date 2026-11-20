@@ -22,6 +22,10 @@ export async function GET(request: NextRequest, { params }: RouteContext<"/agree
   const path = kind === "client" ? data?.client_file_path : data?.signed_file_path;
   if (!path) return new NextResponse("Not found", { status: 404 });
 
+  // Every download is recorded in the activity log (who, which file, when).
+  const logged = await supabase.rpc("log_file_download", { p_entity: "agreements", p_id: id, p_kind: kind });
+  if (logged.error) return new NextResponse("Not found", { status: 404 });
+
   const { data: link, error } = await createAdminClient().storage.from("agreements").createSignedUrl(path, 60, { download: true });
   if (error || !link) return new NextResponse("Could not create a download link", { status: 500 });
   return NextResponse.redirect(link.signedUrl, 303);

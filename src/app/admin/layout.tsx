@@ -12,11 +12,12 @@ export const instant = false;
 export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
   const user = await requireStaff();
   const supabase = await createClient();
-  const [{ count: newInquiries }, { count: toReview }, { count: toConfirm }, unread] = await Promise.all([
+  const [{ count: newInquiries }, { count: toReview }, { count: toConfirm }, { count: docsWaiting }, unread] = await Promise.all([
     supabase.from("inquiries").select("id", { count: "exact", head: true }).eq("status", "new"),
     supabase.from("assessments").select("id", { count: "exact", head: true }).eq("status", "submitted"),
     // Client has signed: Atlas's turn to countersign and confirm.
     supabase.from("agreements").select("id", { count: "exact", head: true }).eq("status", "client_signed"),
+    supabase.from("documents").select("id", { count: "exact", head: true }).eq("status", "received"),
     unreadNotificationCount(),
   ]);
 
@@ -27,6 +28,7 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
     { href: "/admin/assessments", label: "Pre-assessments", count: toReview ?? 0 },
     { href: "/admin/proposals", label: "Proposals" },
     { href: "/admin/agreements", label: "Agreements", count: toConfirm ?? 0 },
+    { href: "/admin/documents", label: "Documents", count: docsWaiting ?? 0 },
     { href: "/admin/notifications", label: "Notifications", count: unread },
     ...(user.staffRole === "SUPER_ADMIN" ? [{ href: "/admin/team", label: "Team" }] : []),
   ];

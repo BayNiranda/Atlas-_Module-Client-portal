@@ -1,17 +1,16 @@
 "use server";
 
-import { createHash, randomUUID } from "node:crypto";
 import { redirect } from "next/navigation";
 import { refresh } from "next/cache";
 import { z } from "zod";
 import { getCurrentUser, staffForAction } from "@/lib/auth/guards";
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { inspectUpload, isIssuedPath, removeUpload, uploadTarget } from "@/lib/storage/direct-upload";
 import type { ActionResult } from "@/modules/inquiries/admin-schema";
 import { getProposal } from "@/modules/proposals/queries";
 import { proposalRef } from "@/modules/proposals/labels";
 import { buildContent, type AgreementContent } from "./content";
-import { checkUpload, safeDisplayName } from "./files";
+import { AGREEMENT_KINDS, MAX_FILE_BYTES, safeDisplayName } from "./files";
 import { getAgreement } from "./queries";
 
 const BUCKET = "agreements";
@@ -135,47 +134,48 @@ export async function deleteAgreementDraft(_: ActionResult, fd: FormData): Promi
   redirect("/admin/agreements");
 }
 
-// Upload a signed scan.
+// Upload a signed scan, straight from the browser to private storage.
 //   kind "client": the client-signed copy (client owner, or staff on their behalf)
 //   kind "signed": the copy signed by both parties (staff)
-// The file is checked, stored privately, then recorded through the database
-// function, which decides (as the signed-in person) whether it is allowed. If it
-// is not, the stored file is removed again.
-export async function uploadAgreementFile(_: ActionResult, fd: FormData): Promise<ActionResult> {
+// Step 1 (startAgreementUpload): basic checks, then a one-time upload permission.
+// Step 2 (finishAgreementUpload): check the stored file's content, then record it
+// through the database function, which decides as the signed-in person whether
+// it counts. If not, the stored file is removed.
+export type UploadStart = { error?: string; bucket?: string; path?: string; token?: string };
+
+async function uploadCaller(agreementId: string, kind: string) {
   const user = await getCurrentUser();
-  if (!user) return { error: ERRORS.not_allowed };
-  const v = id(fd);
-  const kind = z.enum(["client", "signed"]).safeParse(fd.get("kind"));
-  const file = fd.get("file");
-  if (!v.success || !kind.success || !(file instanceof File)) return { error: "Choose a file to upload." };
-  if (user.staffRole && !user.mfaPassed) return { error: ERRORS.not_allowed };
-  if (kind.data === "signed" && !user.staffRole) return { error: ERRORS.not_allowed };
+  if (!user || (user.staffRole && !user.mfaPassed)) return null;
+  if (kind !== "client" && kind !== "signed") return null;
+  if (kind === "signed" && !user.staffRole) return null;
+  const a = await getAgreement(agreementId); // RLS: must be visible to this person
+  return a ? { user, a } : null;
+}
 
-  // RLS: the agreement must be visible to this person at all.
-  const a = await getAgreement(v.data);
-  if (!a) return { error: ERRORS.not_allowed };
+export async function startAgreementUpload(agreementId: string, kind: "client" | "signed"): Promise<UploadStart> {
+  const caller = await uploadCaller(agreementId, kind);
+  if (!caller) return { error: ERRORS.not_allowed };
+  const open = kind === "client" ? caller.a.status === "issued" : ["issued", "client_signed"].includes(caller.a.status);
+  if (!open) return { error: ERRORS.not_open };
+  return uploadTarget(BUCKET, `${caller.a.organization_id}/${caller.a.id}`);
+}
 
-  const bytes = new Uint8Array(await file.arrayBuffer());
-  const check = checkUpload(bytes.byteLength, bytes.subarray(0, 8));
-  if (!check.ok) return { error: check.error };
+export async function finishAgreementUpload(agreementId: string, kind: "client" | "signed", path: string, fileName: string): Promise<ActionResult> {
+  const caller = await uploadCaller(agreementId, kind);
+  const folder = caller ? `${caller.a.organization_id}/${caller.a.id}` : "";
+  if (!caller || !isIssuedPath(path, folder)) return { error: ERRORS.not_allowed };
 
-  const sha256 = createHash("sha256").update(bytes).digest("hex");
-  const path = `${a.organization_id}/${a.id}/${kind.data}-${randomUUID()}.${check.ext}`;
-  const storage = createAdminClient().storage.from(BUCKET);
-  const stored = await storage.upload(path, bytes, { contentType: check.type, upsert: false });
-  if (stored.error) {
-    console.error("agreement upload failed", stored.error.message);
-    return { error: "The file could not be stored. Please try again." };
-  }
+  const file = await inspectUpload(BUCKET, path, fileName, AGREEMENT_KINDS, MAX_FILE_BYTES);
+  if (!file.ok) return { error: file.error };
 
   const supabase = await createClient();
   const { error } = await supabase.rpc("record_agreement_file", {
-    p_id: a.id, p_kind: kind.data, p_path: path, p_name: safeDisplayName(file.name), p_sha256: sha256,
+    p_id: caller.a.id, p_kind: kind, p_path: path, p_name: safeDisplayName(fileName), p_sha256: file.sha256,
   });
   if (error) {
-    await storage.remove([path]); // not allowed or not open: do not keep the file
+    await removeUpload(BUCKET, path); // not allowed or not open: do not keep the file
     return { error: explain(error.message) };
   }
   refresh();
-  return { ok: true, message: kind.data === "client" ? "Uploaded. Atlas has been notified." : "Fully signed copy uploaded." };
+  return { ok: true, message: kind === "client" ? "Uploaded. Atlas has been notified." : "Fully signed copy uploaded." };
 }
