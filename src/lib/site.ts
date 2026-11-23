@@ -1,9 +1,9 @@
 // Public contact details shown on the website.
-// TO CONFIRM: placeholders until the owner provides the real WhatsApp number and email.
+// Trial number from the owner (20 Nov 2026). Email: none yet, so it is hidden.
 export const site = {
-  whatsappNumber: "8562000000000", // digits only, international format
-  whatsappDisplay: "+856 20 0000 0000",
-  email: "info@atlas-advisory.example",
+  whatsappNumber: "8562058220272", // digits only, international format
+  whatsappDisplay: "+856 20 5822 0272",
+  email: "", // empty = not shown
   city: "Vientiane, Lao PDR",
 };
 

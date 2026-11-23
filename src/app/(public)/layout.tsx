@@ -75,7 +75,7 @@ export default async function PublicLayout({ children }: LayoutProps<"/">) {
             <a href={waLink("Hello Atlas Advisory")} target="_blank" rel="noopener noreferrer">
               WhatsApp {site.whatsappDisplay}
             </a>
-            <a href={`mailto:${site.email}`}>{site.email}</a>
+            {site.email && <a href={`mailto:${site.email}`}>{site.email}</a>}
           </div>
         </div>
       </footer>
