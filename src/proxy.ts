@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { env } from "@/lib/env";
+import { siteLockAllows } from "@/lib/site-lock";
 
 const PROTECTED = ["/admin", "/portal", "/mfa", "/account"];
 
@@ -8,6 +9,13 @@ const PROTECTED = ["/admin", "/portal", "/mfa", "/account"];
 // logged-out visitors away from private areas. This is only a first, quick
 // check; the real permission checks are in src/lib/auth/guards.ts and RLS.
 export async function proxy(request: NextRequest) {
+  if (!siteLockAllows(request.headers.get("authorization"), process.env.SITE_PASSWORD)) {
+    return new NextResponse("This website is private for now.", {
+      status: 401,
+      headers: { "WWW-Authenticate": 'Basic realm="Atlas Advisory (private)", charset="UTF-8"' },
+    });
+  }
+
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(env.supabaseUrl, env.supabasePublishableKey, {
